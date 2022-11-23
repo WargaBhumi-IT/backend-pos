@@ -6,7 +6,7 @@ declare global {
             session?: {
                 session_id: string;
                 user_id: string;
-                is_admin: boolean;
+                user_level: number;
                 logged_in_at: Date;
                 expiration_date: Date;
                 data: Map<string, unknown>;

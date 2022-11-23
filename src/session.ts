@@ -5,27 +5,38 @@ import crypto from "crypto";
 export interface ISession {
     session_id: string;
     user_id: string;
-    is_admin: boolean;
+    user_level: number;
     logged_in_at: Date;
     expiration_date: Date;
     data: Map<string, unknown>;
 }
 
-export class Session {
+export class Session implements ISession {
     public session_id: string;
     public user_id: string;
-    public is_admin: boolean;
+    public user_level: number;
     public logged_in_at: Date;
     public expiration_date: Date;
     public data: Map<string, unknown>;
 
-    constructor(session_id: string, user_id: string, is_admin: boolean, logged_in_at: Date, expiration_date: Date) {
+    constructor(session_id: string, user_id: string, user_level: number, logged_in_at: Date, expiration_date: Date) {
         this.session_id = session_id;
         this.user_id = user_id;
-        this.is_admin = is_admin;
+        this.user_level = user_level;
         this.logged_in_at = logged_in_at;
         this.expiration_date = expiration_date;
         this.data = new Map<string, unknown>();
+    }
+
+    public updateExpirationDate(seconds: number = 3600) {
+        const now = new Date();
+        now.setSeconds(now.getSeconds() + seconds);
+        this.expiration_date = now
+    }
+
+    get valid() {
+        const now = new Date();
+        return now <= this.expiration_date
     }
 
     static async generateNewSession(username: string, plainTextPassword: string) {
@@ -38,7 +49,7 @@ export class Session {
         const expiration_date = new Date();
         expiration_date.setHours(expiration_date.getHours() + 1);
 
-        return new Session(session_id, user._id.toString(), user.is_admin, logged_in_at, expiration_date);
+        return new Session(session_id, user._id.toString(), user.user_level, logged_in_at, expiration_date);
     }
 }
 

@@ -2,8 +2,8 @@
   "compilerOptions": {
     "target": "es2016",
     "module": "commonjs",
-    "types": [
-      "./types/index.d.ts"
+    "typeRoots": [
+      "./types"
     ],
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
