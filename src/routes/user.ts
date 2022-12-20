@@ -2,7 +2,7 @@ import User, { UserLevel } from "../models/user";
 import express from "express";
 import Utils from "../utils";
 import Auth from "../auth";
-import * as Session from "../session"
+import * as Session from "../sessions"
 
 const UserRouter = express.Router();
 
@@ -55,5 +55,12 @@ UserRouter.post("/login", Auth.requireApiKey, async (req, res) => {
     if(!login) return res.status(401).json({
         status: "credentials_invalid",
         content: null
+    });
+
+    res.status(200).json({
+        status: "success",
+        content: {
+            session_id: login
+        }
     });
 })
