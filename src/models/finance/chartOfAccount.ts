@@ -5,7 +5,7 @@ export interface ChartOfAccounts {
     name: string;
     type: string;
     is_debit_balance: boolean;
-}
+}; 
 
 export const chartOfAccountsSchema = new Schema({
     name: {
