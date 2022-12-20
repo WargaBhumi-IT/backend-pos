@@ -1,4 +1,4 @@
-import UserModel from "./models/user";
+import UserModel, { User } from "./models/user";
 import utils from "./utils";
 import crypto from "crypto";
 
@@ -40,16 +40,14 @@ export class Session implements ISession {
     }
 
     static async generateNewSession(username: string, plainTextPassword: string) {
-        const user = await UserModel.findOne({ username });
-        if(!user) return null;
-        if(!utils.comparePassword(user.password, user.salt, plainTextPassword)) return null;
+        const user = await User.verifyIdentity(username, plainTextPassword);
 
         const session_id = crypto.createHash("sha512").update(utils.generateNewSalt()).digest("hex");
         const logged_in_at = new Date();
         const expiration_date = new Date();
         expiration_date.setHours(expiration_date.getHours() + 1);
 
-        return new Session(session_id, user._id.toString(), user.user_level, logged_in_at, expiration_date);
+        return new Session(session_id, user.id, user.user_level, logged_in_at, expiration_date);
     }
 }
 
