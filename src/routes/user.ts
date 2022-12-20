@@ -1,6 +1,5 @@
 import User, { UserLevel } from "../models/user";
 import express from "express";
-import Utils from "../utils";
 import Auth from "../auth";
 import * as Session from "../sessions"
 
@@ -45,10 +44,9 @@ UserRouter.post("/login", Auth.requireApiKey, async (req, res) => {
     const username = req.body.username;
     const plainTextPassword = req.body.plainTextPassword;
 
-    const user = await User.findOne({ username });
-    if(!user) return res.status(401).json({
-        status: "user_not_found",
-        content: null
+    const userIsExist = await User.getByUsername(username).then(() => true).catch(() => false);
+    if (! userIsExist) return res.status(404).json({
+        status: "credentials_invalid"
     });
 
     const login = await Session.login(username, plainTextPassword);
