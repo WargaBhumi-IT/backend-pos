@@ -31,26 +31,26 @@ export const ContactSchema = new Schema<IContact>({
 
 export const ContactModel = model<IContact>("backoffice.contact", ContactSchema);
 
-class Contact {
-    id: string;
-    name: string;
-    type: string;
-    value: string;
-    hidden_in_general: boolean;
+export class Contact {
+    private _id: string;
+    private _name: string;
+    private _type: string;
+    private _value: string;
+    private _hidden_in_general: boolean;
 
-    private constructor(
-        id: string,
-        name: string,
-        type: string,
-        value: string,
-        hidden_in_general: boolean
-    ){
-        this.id = id;
-        this.name = name;
-        this.type = type;
-        this.value = value;
-        this.hidden_in_general = hidden_in_general;
+    private constructor(id: string, name: string, type: string, value: string, hidden_in_general: boolean){
+        this._id = id;
+        this._name = name;
+        this._type = type;
+        this._value = value;
+        this._hidden_in_general = hidden_in_general;
     }
+
+    public get id() { return this._id }
+    public get name() { return this._name }
+    public get type() { return this._type }
+    public get value() { return this._value }
+    public get hidden_in_general() { return this._hidden_in_general }
 
     public static async getById(id: string) {
         const c = await ContactModel.findById(id);
@@ -65,19 +65,9 @@ class Contact {
         );
     }
 
-    public static async new(
-        name: string,
-        type: string,
-        value: string,
-        hidden_in_general: boolean
-    ) {
-        const c = await (new ContactModel({
-            name,
-            type,
-            value,
-            hidden_in_general
-        }).save());
-
+    public static async create(name: string, type: string, value: string, hidden_in_general: boolean) {
+        const c = await (new ContactModel({name, type, value, hidden_in_general}).save());
+ 
         return new Contact(
             c._id.toString(),
             c.name,
@@ -87,3 +77,5 @@ class Contact {
         );
     }
 }
+
+export default Contact;
