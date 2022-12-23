@@ -65,7 +65,7 @@ export class Contact {
         );
     }
 
-    public static async create(name: string, type: string, value: string, hidden_in_general: boolean) {
+    public static async create(name: string, type: string, value: string, hidden_in_general: boolean = true) {
         const c = await (new ContactModel({name, type, value, hidden_in_general}).save());
  
         return new Contact(
